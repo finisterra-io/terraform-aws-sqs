@@ -91,25 +91,10 @@ resource "aws_sqs_queue_policy" "this" {
 ################################################################################
 
 resource "aws_sqs_queue_redrive_policy" "this" {
-  count = var.create && !var.create_dlq && length(var.redrive_policy) > 0 ? 1 : 0
+  count = var.create && length(var.redrive_policy) > 0 ? 1 : 0
 
   queue_url      = aws_sqs_queue.this[0].url
-  redrive_policy = jsonencode(var.redrive_policy)
-}
-
-resource "aws_sqs_queue_redrive_policy" "dlq" {
-  count = var.create && var.create_dlq ? 1 : 0
-
-  queue_url = aws_sqs_queue.this[0].url
-  redrive_policy = jsonencode(
-    merge(
-      {
-        deadLetterTargetArn = aws_sqs_queue.dlq[0].arn
-        maxReceiveCount     = 5
-      },
-      var.redrive_policy
-    )
-  )
+  redrive_policy = var.redrive_policy
 }
 
 ################################################################################
@@ -214,18 +199,12 @@ resource "aws_sqs_queue_redrive_allow_policy" "this" {
   count = var.create && !var.create_dlq && length(var.redrive_allow_policy) > 0 ? 1 : 0
 
   queue_url            = aws_sqs_queue.this[0].url
-  redrive_allow_policy = jsonencode(var.redrive_allow_policy)
+  redrive_allow_policy = var.redrive_allow_policy
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "dlq" {
-  count = var.create && var.create_dlq ? 1 : 0
+  count = var.create && var.create_dlq  && length(var.dlq_redrive_allow_policy) > 0 ? 1 : 0
 
   queue_url = aws_sqs_queue.dlq[0].url
-  redrive_allow_policy = jsonencode(merge(
-    {
-      redrivePermission = "byQueue",
-      sourceQueueArns   = [aws_sqs_queue.this[0].arn]
-    },
-    var.dlq_redrive_allow_policy)
-  )
+  redrive_allow_policy = var.dlq_redrive_allow_policy
 }
