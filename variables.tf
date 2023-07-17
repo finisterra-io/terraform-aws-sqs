@@ -120,6 +120,18 @@ variable "create_queue_policy" {
   default     = false
 }
 
+variable "create_queue_policy_document" {
+  description = "Whether to create SQS queue policy document"
+  type        = bool
+  default     = false
+}
+
+variable "aws_sqs_queue_policy" {
+  description = "SQS policy"
+  type        = string
+  default     = ""
+}
+
 variable "source_queue_policy_documents" {
   description = "List of IAM policy documents that are merged together into the exported document. Statements must have unique `sid`s"
   type        = list(string)
@@ -146,6 +158,18 @@ variable "create_dlq" {
   description = "Determines whether to create SQS dead letter queue"
   type        = bool
   default     = false
+}
+
+variable "create_dlq_queue_policy_document" {
+  description = "Whether to create SQS queue policy document DLQ"
+  type        = bool
+  default     = false
+}
+
+variable "aws_sqs_queue_policy_dlq" {
+  description = "SQS policy DLQ"
+  type        = string
+  default     = ""
 }
 
 variable "dlq_content_based_deduplication" {

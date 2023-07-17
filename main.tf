@@ -32,7 +32,7 @@ resource "aws_sqs_queue" "this" {
 ################################################################################
 
 data "aws_iam_policy_document" "this" {
-  count = var.create && var.create_queue_policy ? 1 : 0
+  count = var.create && var.create_queue_policy_document ? 1 : 0
 
   source_policy_documents   = var.source_queue_policy_documents
   override_policy_documents = var.override_queue_policy_documents
@@ -83,7 +83,7 @@ resource "aws_sqs_queue_policy" "this" {
   count = var.create && var.create_queue_policy ? 1 : 0
 
   queue_url = aws_sqs_queue.this[0].url
-  policy    = data.aws_iam_policy_document.this[0].json
+  policy    = coalesce(var.aws_sqs_queue_policy, try(data.aws_iam_policy_document.this[0].json, ""))
 }
 
 ################################################################################
@@ -152,7 +152,7 @@ resource "aws_sqs_queue" "dlq" {
 ################################################################################
 
 data "aws_iam_policy_document" "dlq" {
-  count = var.create && var.create_dlq && var.create_dlq_queue_policy ? 1 : 0
+  count = var.create && var.create_dlq && var.create_dlq_queue_policy_document ? 1 : 0
 
   source_policy_documents   = var.source_dlq_queue_policy_documents
   override_policy_documents = var.override_dlq_queue_policy_documents
@@ -203,7 +203,7 @@ resource "aws_sqs_queue_policy" "dlq" {
   count = var.create && var.create_dlq && var.create_dlq_queue_policy ? 1 : 0
 
   queue_url = aws_sqs_queue.dlq[0].url
-  policy    = data.aws_iam_policy_document.dlq[0].json
+  policy    = coalesce(var.aws_sqs_queue_policy_dlq, try(data.aws_iam_policy_document.dlq[0].json, ""))
 }
 
 ################################################################################
