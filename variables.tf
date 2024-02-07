@@ -68,12 +68,6 @@ variable "name" {
   default     = null
 }
 
-variable "use_name_prefix" {
-  description = "Determines whether `name` is used as a prefix"
-  type        = bool
-  default     = false
-}
-
 variable "receive_wait_time_seconds" {
   description = "The time for which a ReceiveMessage call will wait for a message to arrive (long polling) before returning. An integer from 0 to 20 (seconds)"
   type        = number
@@ -113,59 +107,15 @@ variable "tags" {
 ################################################################################
 # Queue Policy
 ################################################################################
-
-variable "create_queue_policy" {
-  description = "Whether to create SQS queue policy"
-  type        = bool
-  default     = false
-}
-
-variable "create_queue_policy_document" {
-  description = "Whether to create SQS queue policy document"
-  type        = bool
-  default     = false
-}
-
 variable "aws_sqs_queue_policy" {
   description = "SQS policy"
   type        = string
   default     = ""
 }
 
-variable "source_queue_policy_documents" {
-  description = "List of IAM policy documents that are merged together into the exported document. Statements must have unique `sid`s"
-  type        = list(string)
-  default     = []
-}
-
-variable "override_queue_policy_documents" {
-  description = "List of IAM policy documents that are merged together into the exported document. In merging, statements with non-blank `sid`s will override statements with the same `sid`"
-  type        = list(string)
-  default     = []
-}
-
-variable "queue_policy_statements" {
-  description = "A map of IAM policy [statements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document#statement) for custom permission usage"
-  type        = any
-  default     = {}
-}
-
 ################################################################################
 # Dead Letter Queue
 ################################################################################
-
-variable "create_dlq" {
-  description = "Determines whether to create SQS dead letter queue"
-  type        = bool
-  default     = false
-}
-
-variable "create_dlq_queue_policy_document" {
-  description = "Whether to create SQS queue policy document DLQ"
-  type        = bool
-  default     = false
-}
-
 variable "aws_sqs_queue_policy_dlq" {
   description = "SQS policy DLQ"
   type        = string
@@ -241,33 +191,5 @@ variable "dlq_visibility_timeout_seconds" {
 variable "dlq_tags" {
   description = "A mapping of additional tags to assign to the dead letter queue"
   type        = map(string)
-  default     = {}
-}
-
-################################################################################
-# Dead Letter Queue Policy
-################################################################################
-
-variable "create_dlq_queue_policy" {
-  description = "Whether to create SQS queue policy"
-  type        = bool
-  default     = false
-}
-
-variable "source_dlq_queue_policy_documents" {
-  description = "List of IAM policy documents that are merged together into the exported document. Statements must have unique `sid`s"
-  type        = list(string)
-  default     = []
-}
-
-variable "override_dlq_queue_policy_documents" {
-  description = "List of IAM policy documents that are merged together into the exported document. In merging, statements with non-blank `sid`s will override statements with the same `sid`"
-  type        = list(string)
-  default     = []
-}
-
-variable "dlq_queue_policy_statements" {
-  description = "A map of IAM policy [statements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document#statement) for custom permission usage"
-  type        = any
   default     = {}
 }
